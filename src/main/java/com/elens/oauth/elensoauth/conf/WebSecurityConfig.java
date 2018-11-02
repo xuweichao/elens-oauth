@@ -3,13 +3,10 @@ package com.elens.oauth.elensoauth.conf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 
 /**
  * 用于保护oauth相关的endpoints，同时主要作用于用户的登录(form login,Basic auth)
@@ -37,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
@@ -49,7 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println("---------------WebSecurityConfig-----------------");
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
@@ -63,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
 
-       // 开放的资源
+        // 开放的资源
         web.ignoring()
                 .antMatchers("/admin/login");
     }
@@ -86,17 +82,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth/**").authenticated()
                 .and()
                 .formLogin().permitAll(); //新增login form支持用户登录及授权
-//        http.formLogin().loginPage("").defaultSuccessUrl("");
+        //自定义登录页
+        http.formLogin().loginPage("/login").defaultSuccessUrl("/confirm");
+
 //        http.logout().logoutUrl("").logoutUrl("");
     }
-
-//    //开启全局方法拦截
-//    @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
-//    public static class GlobalSecurityConfiguration extends GlobalMethodSecurityConfiguration {
-//        @Override
-//        protected MethodSecurityExpressionHandler createExpressionHandler() {
-//            return new OAuth2MethodSecurityExpressionHandler();
-//        }
-//
-//    }
 }
+
+

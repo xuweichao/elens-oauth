@@ -13,9 +13,6 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 public class ElensOauthApplication {
 
 	public static void main(String[] args) {
-        ApplicationContext app=SpringApplication.run(ElensOauthApplication.class, args);
-//        PasswordEncoder encoder=app.getBean(PasswordEncoder.class);
-//		String pass=encoder.encode("xuweichao").trim();
-//		System.out.println(pass);
+        SpringApplication.run(ElensOauthApplication.class, args);
 	}
 }

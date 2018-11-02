@@ -2,6 +2,7 @@ package com.elens.oauth.elensoauth.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,22 +14,22 @@ import java.util.List;
 public class MainController {
 
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String index(){
 
         return "index" ;
     }
 
-    @RequestMapping("/detail")
+    @PostMapping("/detail")
     public String hello(){
         return "hello" ;
     }
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public String login() {
         return "login";
     }
-    @GetMapping("/me")
+    @PostMapping("/me")
     public Principal user(Principal principal) {
         return principal;
     }
