@@ -93,11 +93,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .and()
                     .withClient("client_code")
                     .secret(passwordEncoder.encode(clientScret))
-                    .authorizedGrantTypes("authorization_code", "refresh_token",
-                            "password", "implicit")
+                    .authorizedGrantTypes("authorization_code", "refresh_token","password", "implicit")
                     .scopes("all")
                     .authorities("ROLE_ADMIN")
-                    .redirectUris("/auth/")
+                    .redirectUris("/auth")
                     .accessTokenValiditySeconds(200)
                     .refreshTokenValiditySeconds(600);
         } catch (Exception e) {
@@ -114,8 +113,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 //必须设置 UserDetailsService 否则刷新token 时会报错
                 .userDetailsService(userDetailsService);
 
-        //自定义授权页
+//        //自定义授权页
         endpoints.pathMapping("/oauth/confirm_access", "/confirm");
+
+
     }
 
 

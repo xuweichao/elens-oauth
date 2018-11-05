@@ -74,7 +74,7 @@
 
     var code=location.search.split("=")[1];
     $("#client_code").on("click", function () {
-        location.href="/oauth/authorize?client_id=client_code&response_type=code&scope=all&redirect_uri=/auth/"
+        location.href="/oauth/authorize?client_id=client_code&response_type=code&scope=all&redirect_uri=/auth"
     });
 
     var codeToken="";
@@ -84,7 +84,7 @@
                 grant_type: "authorization_code",
                 client_id: "client_code",
                 client_secret: "123456",
-                redirect_uri:"/auth/",
+                redirect_uri:"/auth",
                 code:code
             },
             function (data) {
