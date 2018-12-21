@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("decision")
 public class DecisionController {
 
-
     @RequestMapping("/")
     public String index(){
-
         return "index" ;
     }
 
@@ -24,8 +22,5 @@ public class DecisionController {
         return "login";
     }
 
-//    @RequestMapping("/abc")
-//    public List<Permission> getroles(){
-//        return permissionService.findByAdminUserId(2) ;
-//    }
+
 }

@@ -11,15 +11,6 @@
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <body>
 <div class="container">
-    <h2>Oauth2.0 客户端模式</h2>
-
-    <p>
-        <button type="button" class="btn btn-primary" id="client_model">开始授权</button>
-    </p>
-
-    <p>
-        <button type="button" class="btn btn-success" id="model_source">获取资源</button>
-    </p>
 
     <h2>Oauth2.0 客户端授权码模式</h2>
     <p>
@@ -41,40 +32,11 @@
 </body>
 <script>
 
-    var clientToken="";
-    $("#client_model").on("click", function () {
-        $.post("/oauth/token",
-            {
-                grant_type: "client_credentials",
-                client_id: "client_1",
-                client_secret: "123456"
-            },
-            function (data) {
-                console.log(data);
-                clientToken=data.access_token;
-                if(clientToken){
-                    alert("授权成功！！ "+clientToken);
-                }else {
-                    alert("授权失败！！");
-                }
-            });
-    });
-
-    $("#model_source").on("click", function () {
-        $.post("/admin/detail",
-            {
-                access_token: clientToken
-            },
-            function (data) {
-                console.log(data);
-                alert("资源获取成功！！"+data);
-            });
-    });
 
 
     var code=location.search.split("=")[1];
     $("#client_code").on("click", function () {
-        location.href="/oauth/authorize?client_id=client_code&response_type=code&scope=all&redirect_uri=/auth"
+        location.href="/oauth/authorize?client_id=elens-rbc&response_type=code&scope=all&redirect_uri=/auth"
     });
 
     var codeToken="";
@@ -82,8 +44,8 @@
         $.post("/oauth/token",
             {
                 grant_type: "authorization_code",
-                client_id: "client_code",
-                client_secret: "123456",
+                client_id: "elens-rbc",
+                client_secret: "elens-rbc",
                 redirect_uri:"/auth",
                 code:code
             },
@@ -91,7 +53,7 @@
                 console.log(data);
                 codeToken=data.access_token;
                 if(codeToken){
-                    alert("授权成功！！ token:"+codeToken+" refresh_token:"+data.refresh_token);
+                    alert("授权成功！！ token:"+codeToken);
                 }else {
                     alert("授权失败！！");
                 }
@@ -99,7 +61,7 @@
     });
 
     $("#client_resource").on("click", function () {
-        $.post("/admin/detail",
+        $.post("/admin/me",
             {
                 access_token: codeToken
             },

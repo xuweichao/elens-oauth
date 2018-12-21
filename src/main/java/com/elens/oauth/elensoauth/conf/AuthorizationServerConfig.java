@@ -62,47 +62,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     @Override
-    public void configure(ClientDetailsServiceConfigurer clients) {
-
-        try {
-            jdbcClientDetailsService().removeClientDetails("client_1");
-            jdbcClientDetailsService().removeClientDetails("client_code");
-        } catch (NoSuchClientException e) {
-        }
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
 
-        try {
-            clients.jdbc(dataSource)
-                    //                .withClient("client")
-                    //                .secret(passwordEncoder.encode("123456"))
-                    //                .authorizedGrantTypes("password", "refresh_token")//允许授权范围 (密码授权和刷新令牌)
-                    //                .authorities("ROLE_ADMIN", "ROLE_USER")//客户端可以使用的权限
-                    //                .scopes("read", "write")
-                    //                .accessTokenValiditySeconds(7200)
-                    //                .refreshTokenValiditySeconds(10000)
-
-                    //客户端模式
-                    //.and()
-                    .withClient("client_1")
-                    .secret(passwordEncoder.encode(clientScret))
-                    .authorizedGrantTypes("client_credentials")
-                    .scopes("read", "write")
-                    .authorities("client_credentials")
-                    .accessTokenValiditySeconds(300)
-                    //授权码模式
-                    .and()
-                    .withClient("client_code")
-                    .secret(passwordEncoder.encode(clientScret))
-                    .authorizedGrantTypes("authorization_code", "refresh_token","password", "implicit")
-                    .scopes("all")
-                    .authorities("ROLE_ADMIN")
-                    .redirectUris("/auth")
-                    .accessTokenValiditySeconds(200)
-                    .refreshTokenValiditySeconds(600);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        clients
+                .jdbc(dataSource);
+//                .withClient("client_code")
+//                .secret(passwordEncoder.encode(clientScret))
+//                .authorizedGrantTypes("authorization_code", "refresh_token", "password", "implicit")
+//                .scopes("all")
+//                .authorities("ROLE_ADMIN")
+//                .redirectUris("/auth")
+//                .accessTokenValiditySeconds(200)
+//                .refreshTokenValiditySeconds(600)
+//                .autoApprove(true);
 
     }
 
@@ -112,7 +85,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authenticationManager(authenticationManager)
                 //必须设置 UserDetailsService 否则刷新token 时会报错
                 .userDetailsService(userDetailsService);
-
 //        //自定义授权页
         endpoints.pathMapping("/oauth/confirm_access", "/confirm");
 
@@ -126,6 +98,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()")
                 .allowFormAuthenticationForClients();//允许表单登录
-
     }
 }

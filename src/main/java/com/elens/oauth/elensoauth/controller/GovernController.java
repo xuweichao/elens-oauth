@@ -24,8 +24,5 @@ public class GovernController {
         return "login";
     }
 
-//    @RequestMapping("/abc")
-//    public List<Permission> getroles(){
-//        return permissionService.findByAdminUserId(2) ;
-//    }
+
 }

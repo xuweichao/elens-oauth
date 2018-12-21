@@ -1,6 +1,7 @@
 package com.elens.oauth.elensoauth.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -21,11 +22,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Order(2)
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)//这个注解，可以开启security的注解，我们可以在需要控制权限的方法上面使用@PreAuthorize，@PreFilter这些注解
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Value("${server.servlet.session.cookie.name}")
+    private String appCookieName;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,19 +54,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
-    /**
-     * 用来构建 Filter 链
-     *
-     * @param web
-     * @throws Exception
-     */
-    @Override
-    public void configure(WebSecurity web) {
-
-        // 开放的资源
-        web.ignoring()
-                .antMatchers("/admin/login");
-    }
 
     /**
      * 用来配置拦截保护的请求
@@ -75,17 +66,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //不拦截 oauth 开放的资源
         http.csrf().disable();
-        http.requestMatchers()
+
+        http.requestMatchers()//使HttpSecurity接收以"/login/","/oauth/"开头请求。
                 .antMatchers("/oauth/**", "/login/**", "/logout/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/oauth/**").authenticated()
                 .and()
-                .formLogin().permitAll(); //新增login form支持用户登录及授权
-        //自定义登录页
-        http.formLogin().loginPage("/login").defaultSuccessUrl("/confirm");
-
-//        http.logout().logoutUrl("").logoutUrl("");
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/confirm").and()
+                .logout().deleteCookies(appCookieName);
     }
 }
 
